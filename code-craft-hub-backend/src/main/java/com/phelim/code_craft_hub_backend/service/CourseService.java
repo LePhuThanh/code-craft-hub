@@ -7,6 +7,7 @@ import com.phelim.code_craft_hub_backend.model.Course;
 import org.springframework.stereotype.Service;
 import com.phelim.code_craft_hub_backend.exception.BadRequestException;
 import com.phelim.code_craft_hub_backend.exception.ResourceNotFoundException;
+import java.nio.file.Files;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,9 @@ public class CourseService {
 
         try {
 
-            if (file.length() == 0) {
+            String content = java.nio.file.Files.readString(file.toPath());
+
+            if (content.isBlank()) {
                 return new ArrayList<>();
             }
 
@@ -139,7 +142,10 @@ public class CourseService {
 
             if (courses.get(i).getId().equals(id)) {
 
+                Course existingCourse = courses.get(i);
+
                 updatedCourse.setId(id);
+                updatedCourse.setCreatedAt(existingCourse.getCreatedAt());
 
                 courses.set(i, updatedCourse);
 
