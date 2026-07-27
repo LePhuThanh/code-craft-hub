@@ -1,0 +1,144 @@
+1. Khởi động ứng dụng
+   ./gradlew bootRun
+
+Hoặc chạy từ IntelliJ.
+
+Đảm bảo thấy:
+
+Tomcat started on port 8080
+2. GET tất cả Course (ban đầu)
+   curl.exe -X GET http://localhost:8080/api/courses
+
+Kết quả mong đợi:
+
+[]
+3. Tạo Course
+   curl.exe -X POST http://localhost:8080/api/courses ^
+   -H "Content-Type: application/json" ^
+   -d "{\"name\":\"Spring Boot\",\"description\":\"REST API Development\",\"target_date\":\"2026-08-01\",\"status\":\"Not Started\"}"
+
+Kết quả:
+
+{
+"id": 1,
+"name": "Spring Boot",
+"description": "REST API Development",
+"target_date": "2026-08-01",
+"status": "Not Started",
+"created_at": "2026-07-28T..."
+}
+
+Kiểm tra file:
+
+courses.json
+
+Đã có:
+
+[
+{
+"id": 1,
+"name": "Spring Boot",
+"description": "REST API Development",
+"target_date": "2026-08-01",
+"status": "Not Started",
+"created_at": "..."
+}
+]
+4. GET tất cả Course
+   curl.exe -X GET http://localhost:8080/api/courses
+
+Kết quả:
+
+[
+{
+"id": 1,
+...
+}
+]
+5. GET theo ID
+   curl.exe -X GET http://localhost:8080/api/courses/1
+
+Kết quả:
+
+{
+"id": 1,
+"name": "Spring Boot",
+"description": "REST API Development",
+...
+}
+6. Update Course
+   curl.exe -X PUT http://localhost:8080/api/courses/1 ^
+   -H "Content-Type: application/json" ^
+   -d "{\"name\":\"Spring Boot Advanced\",\"description\":\"Updated Course\",\"target_date\":\"2026-09-01\",\"status\":\"Completed\"}"
+
+Kiểm tra:
+
+curl.exe -X GET http://localhost:8080/api/courses/1
+
+Kết quả:
+
+{
+"id": 1,
+"name": "Spring Boot Advanced",
+"description": "Updated Course",
+"target_date": "2026-09-01",
+"status": "Completed",
+"created_at": "..."
+}
+
+Kiểm tra created_at vẫn giữ nguyên giá trị ban đầu.
+
+7. GET Statistics
+   curl.exe -X GET http://localhost:8080/api/courses/stats
+
+Ví dụ:
+
+{
+"totalCourses": 1,
+"notStarted": 0,
+"inProgress": 0,
+"completed": 1
+}
+8. DELETE Course
+   curl.exe -X DELETE http://localhost:8080/api/courses/1
+
+Kết quả:
+
+HTTP 204 No Content
+
+Kiểm tra lại:
+
+curl.exe -X GET http://localhost:8080/api/courses
+
+Kết quả:
+
+[]
+9. Test Validation
+
+Thiếu trường name:
+
+curl.exe -X POST http://localhost:8080/api/courses ^
+-H "Content-Type: application/json" ^
+-d "{\"description\":\"REST API\",\"target_date\":\"2026-08-01\",\"status\":\"Not Started\"}"
+
+Kết quả mong đợi:
+
+{
+"name": "Course name is required"
+}
+
+HTTP:
+
+400 Bad Request
+10. Test Resource Not Found
+    curl.exe -X GET http://localhost:8080/api/courses/999
+
+Kết quả:
+
+{
+"error": "Course not found with id: 999"
+}
+
+HTTP:
+
+404 Not Found

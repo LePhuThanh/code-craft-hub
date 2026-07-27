@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Java",
+    "description": "Core Java",
+    "target_date": "2026-08-01",
+    "status": "Not Started",
+    "created_at": "2026-07-27T22:00:00"
+  },
+  {
+    "id": 2,
+    "name": "Spring",
+    "description": "Spring Boot",
+    "target_date": "2026-08-10",
+    "status": "Completed",
+    "created_at": "2026-07-27T22:10:00"
+  },
+  {
+    "id": 3,
+    "name": "Docker",
+    "description": "Container",
+    "target_date": "2026-08-20",
+    "status": "In Progress",
+    "created_at": "2026-07-27T22:20:00"
+  }
+]
