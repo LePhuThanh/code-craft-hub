@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import com.phelim.code_craft_hub_backend.model.CourseStats;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,4 +82,15 @@ public class CourseController {
 
     }
 
+    /**
+     * GET /api/courses/stats
+     */
+    @GetMapping("/stats")
+    public ResponseEntity<CourseStats> getCourseStats() {
+
+        return ResponseEntity.ok(
+                courseService.getCourseStats()
+        );
+
+    }
 }

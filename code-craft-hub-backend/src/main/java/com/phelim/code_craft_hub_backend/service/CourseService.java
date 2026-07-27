@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import com.phelim.code_craft_hub_backend.model.CourseStats;
+import com.phelim.code_craft_hub_backend.model.CourseStatus;
 
 @Service
 public class CourseService {
@@ -178,4 +180,41 @@ public class CourseService {
 
     }
 
+    /**
+     * Get course statistics.
+     */
+    public CourseStats getCourseStats() {
+
+        List<Course> courses = getAllCourses();
+
+        int notStarted = 0;
+        int inProgress = 0;
+        int completed = 0;
+
+        for (Course course : courses) {
+
+            if (course.getStatus() == null) {
+                continue;
+            }
+
+            switch (course.getStatus()) {
+
+                case NOT_STARTED -> notStarted++;
+
+                case IN_PROGRESS -> inProgress++;
+
+                case COMPLETED -> completed++;
+
+            }
+
+        }
+
+        return new CourseStats(
+                courses.size(),
+                notStarted,
+                inProgress,
+                completed
+        );
+
+    }
 }
