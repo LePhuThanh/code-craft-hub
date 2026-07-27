@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.phelim.code_craft_hub_backend.model.Course;
 import org.springframework.stereotype.Service;
+import com.phelim.code_craft_hub_backend.exception.BadRequestException;
+import com.phelim.code_craft_hub_backend.exception.ResourceNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +106,8 @@ public class CourseService {
         return getAllCourses().stream()
                 .filter(course -> course.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course not found with id: " + id));
 
     }
 
@@ -143,28 +146,29 @@ public class CourseService {
                 saveCourses(courses);
 
                 return updatedCourse;
+
             }
 
         }
 
-        return null;
+        throw new ResourceNotFoundException("Course not found with id: " + id);
 
     }
 
     /**
      * Delete course by id.
      */
-    public boolean deleteCourse(Integer id) {
+    public void deleteCourse(Integer id) {
 
         List<Course> courses = getAllCourses();
 
         boolean removed = courses.removeIf(course -> course.getId().equals(id));
 
-        if (removed) {
-            saveCourses(courses);
+        if (!removed) {
+            throw new ResourceNotFoundException("Course not found with id: " + id);
         }
 
-        return removed;
+        saveCourses(courses);
 
     }
 
