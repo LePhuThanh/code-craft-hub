@@ -5,6 +5,7 @@ import com.phelim.code_craft_hub_backend.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,13 +44,15 @@ public class CourseController {
      * POST /api/courses
      */
     @PostMapping
-    public ResponseEntity<Course> createCourse(@RequestBody Course course) {
+    public ResponseEntity<Course> createCourse(
+            @Valid @RequestBody Course course) {
 
         course.setCreatedAt(LocalDateTime.now().toString());
 
         Course savedCourse = courseService.createCourse(course);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedCourse);
 
     }
 
@@ -59,7 +62,7 @@ public class CourseController {
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(
             @PathVariable Integer id,
-            @RequestBody Course course) {
+            @Valid @RequestBody Course course) {
 
         return ResponseEntity.ok(
                 courseService.updateCourse(id, course));
