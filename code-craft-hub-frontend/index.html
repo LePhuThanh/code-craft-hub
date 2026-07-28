@@ -8,6 +8,12 @@
 
     <style>
 
+        html{
+
+            scroll-behavior:smooth;
+
+        }
+
         :root{
             --primary:#8B5CF6;
             --primary-dark:#6D28D9;
@@ -78,6 +84,8 @@
 
         section{
 
+            transition:.3s;
+
             background:var(--card);
 
             border-radius:var(--radius);
@@ -87,6 +95,12 @@
             padding:25px;
 
             margin-bottom:35px;
+
+        }
+
+        section:hover{
+
+            transform:translateY(-3px);
 
         }
 
@@ -305,15 +319,17 @@
 
             align-items:center;
 
-            background:rgba(255,255,255,.65);
+            flex-direction:column;
 
-            backdrop-filter:blur(2px);
+            background:rgba(255,255,255,.72);
+
+            backdrop-filter:blur(4px);
 
             z-index:1000;
 
-            font-size:22px;
+            font-size:18px;
 
-            font-weight:bold;
+            font-weight:600;
 
             color:var(--primary);
 
@@ -323,17 +339,17 @@
 
             content:"";
 
-            width:48px;
+            width:60px;
 
-            height:48px;
+            height:60px;
 
-            margin-right:15px;
+            margin-bottom:20px;
 
             border-radius:50%;
 
-            border:5px solid #DDD;
+            border:6px solid #DDD;
 
-            border-top:5px solid var(--primary);
+            border-top:6px solid var(--primary);
 
             animation:spin .8s linear infinite;
 
@@ -350,6 +366,12 @@
         }
 
         #toast{
+
+            opacity:0;
+
+            transform:translateY(-20px);
+
+            transition:.35s;
 
             position:fixed;
 
@@ -386,6 +408,30 @@
         }
 
         @media(max-width:900px){
+
+            header h1{
+
+                font-size:28px;
+
+            }
+
+            main{
+
+                padding:15px;
+
+            }
+
+            section{
+
+                padding:18px;
+
+            }
+
+            button{
+
+                width:100%;
+
+            }
 
             table,
             thead,
@@ -464,6 +510,16 @@
 
         }
 
+        #toast.show{
+
+            display:block;
+
+            opacity:1;
+
+            transform:translateY(0);
+
+        }
+
     </style>
 </head>
 
@@ -473,7 +529,7 @@
 
 <header>
     <h1>CodeCraftHub</h1>
-    <p>Your Learning Management Platform</p>
+    <p>Phelim Learning Management Platform</p>
 </header>
 
 <!-- ================= MAIN ================= -->
@@ -674,6 +730,18 @@
 
 </div>
 
+<footer
+        style="
+text-align:center;
+padding:30px;
+color:#888;
+font-size:14px;
+">
+
+    © 2026 CodeCraftHub • Learning Management Dashboard
+
+</footer>
+
 <script>
 
     const API_URL = "http://localhost:8080/api/courses";
@@ -716,11 +784,11 @@
             ? "toast-success"
             : "toast-error";
 
-        toast.style.display = "block";
+        toast.classList.add("show");
 
         setTimeout(() => {
 
-            toast.style.display = "none";
+            toast.classList.remove("show");
 
         }, 3000);
 
@@ -749,12 +817,41 @@
         if (courses.length === 0) {
 
             tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" style="text-align:center;">
-                    No courses found.
-                </td>
-            </tr>
-        `;
+<tr>
+
+<td colspan="7">
+
+<div
+style="
+padding:45px;
+text-align:center;
+color:#777;
+">
+
+<h2 style="margin-bottom:10px;">
+
+📚
+
+</h2>
+
+<h3>
+
+No courses available
+
+</h3>
+
+<p>
+
+Create your first course above.
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+`;
 
             return;
 
@@ -812,6 +909,8 @@
 
     async function loadCourses() {
 
+        toggleButtons(true);
+
         showLoading();
 
         try {
@@ -837,6 +936,8 @@
         finally {
 
             hideLoading();
+
+            toggleButtons(false);
 
         }
 
@@ -1095,6 +1196,26 @@
             hideLoading();
 
         }
+
+    }
+
+    window.addEventListener("click",(event)=>{
+
+        if(event.target===editModal){
+
+            editModal.style.display="none";
+
+        }
+
+    });
+
+    function toggleButtons(disabled){
+
+        document.querySelectorAll("button").forEach(button=>{
+
+            button.disabled=disabled;
+
+        });
 
     }
 
