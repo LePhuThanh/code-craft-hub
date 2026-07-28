@@ -642,6 +642,182 @@
 
 <script>
 
+    const API_URL = "http://localhost:8080/api/courses";
+
+    const tableBody = document.getElementById("courseTableBody");
+
+    const loading = document.getElementById("loading");
+
+    const toast = document.getElementById("toast");
+
+    /* ================= Loading ================= */
+
+    function showLoading() {
+
+        loading.style.display = "flex";
+
+    }
+
+    function hideLoading() {
+
+        loading.style.display = "none";
+
+    }
+
+    /* ================= Toast ================= */
+
+    function showToast(message, success = true) {
+
+        toast.textContent = message;
+
+        toast.className = success
+            ? "toast-success"
+            : "toast-error";
+
+        toast.style.display = "block";
+
+        setTimeout(() => {
+
+            toast.style.display = "none";
+
+        }, 3000);
+
+    }
+
+    /* ================= Format Date ================= */
+
+    function formatDate(date) {
+
+        if (!date) {
+
+            return "-";
+
+        }
+
+        return new Date(date).toLocaleString();
+
+    }
+
+    /* ================= Render ================= */
+
+    function renderCourses(courses) {
+
+        tableBody.innerHTML = "";
+
+        if (courses.length === 0) {
+
+            tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center;">
+                    No courses found.
+                </td>
+            </tr>
+        `;
+
+            return;
+
+        }
+
+        courses.forEach(course => {
+
+            tableBody.innerHTML += `
+
+            <tr>
+
+                <td data-label="ID">${course.id}</td>
+
+                <td data-label="Name">${course.name}</td>
+
+                <td data-label="Description">${course.description}</td>
+
+                <td data-label="Target Date">${course.target_date}</td>
+
+                <td data-label="Status">${course.status}</td>
+
+                <td data-label="Created At">
+                    ${formatDate(course.created_at)}
+                </td>
+
+                <td data-label="Actions">
+
+                    <button
+                        class="edit-btn"
+                        onclick="editCourse(${course.id})">
+
+                        Edit
+
+                    </button>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteCourse(${course.id})">
+
+                        Remove
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        });
+
+    }
+
+    /* ================= GET ================= */
+
+    async function loadCourses() {
+
+        showLoading();
+
+        try {
+
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+
+                throw new Error("Unable to load courses.");
+
+            }
+
+            const courses = await response.json();
+
+            renderCourses(courses);
+
+        }
+        catch (error) {
+
+            showToast(error.message, false);
+
+        }
+        finally {
+
+            hideLoading();
+
+        }
+
+    }
+
+    /* ================= Placeholder ================= */
+
+    function editCourse(id) {
+
+        showToast("Edit feature will be implemented in Part 5.");
+
+    }
+
+    function deleteCourse(id) {
+
+        showToast("Delete feature will be implemented in Part 6.");
+
+    }
+
+    /* ================= Start ================= */
+
+    loadCourses();
+
 </script>
 
 </body>
