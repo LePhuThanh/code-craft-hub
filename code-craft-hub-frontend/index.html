@@ -650,6 +650,8 @@
 
     const toast = document.getElementById("toast");
 
+    const courseForm = document.getElementById("courseForm");
+
     /* ================= Loading ================= */
 
     function showLoading() {
@@ -815,6 +817,85 @@
     }
 
     /* ================= Start ================= */
+
+    /* ================= POST ================= */
+
+    courseForm.addEventListener("submit", createCourse);
+
+    async function createCourse(event) {
+
+        event.preventDefault();
+
+        const course = {
+
+            name: document.getElementById("name").value.trim(),
+
+            description: document.getElementById("description").value.trim(),
+
+            target_date: document.getElementById("targetDate").value,
+
+            status: document.getElementById("status").value
+
+        };
+
+        if (
+            !course.name ||
+            !course.description ||
+            !course.target_date ||
+            !course.status
+        ) {
+
+            showToast("Please complete all required fields.", false);
+
+            return;
+
+        }
+
+        showLoading();
+
+        try {
+
+            const response = await fetch(API_URL, {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify(course)
+
+            });
+
+            if (!response.ok) {
+
+                const error = await response.json();
+
+                throw new Error(error.error || "Unable to create course.");
+
+            }
+
+            courseForm.reset();
+
+            showToast("Course created successfully.");
+
+            await loadCourses();
+
+        }
+        catch (error) {
+
+            showToast(error.message, false);
+
+        }
+        finally {
+
+            hideLoading();
+
+        }
+
+    }
 
     loadCourses();
 
