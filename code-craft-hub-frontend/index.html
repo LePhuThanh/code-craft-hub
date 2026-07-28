@@ -249,6 +249,8 @@
 
         #editModal{
 
+            animation:fadeIn .25s ease;
+
             position:fixed;
 
             inset:0;
@@ -425,6 +427,26 @@
                 margin-bottom:5px;
 
                 font-weight:bold;
+
+            }
+
+        }
+
+        @keyframes fadeIn{
+
+            from{
+
+                opacity:0;
+
+                transform:scale(.95);
+
+            }
+
+            to{
+
+                opacity:1;
+
+                transform:scale(1);
 
             }
 
@@ -652,6 +674,12 @@
 
     const courseForm = document.getElementById("courseForm");
 
+    const editModal = document.getElementById("editModal");
+
+    const editForm = document.getElementById("editForm");
+
+    const cancelEdit = document.getElementById("cancelEdit");
+
     /* ================= Loading ================= */
 
     function showLoading() {
@@ -804,9 +832,130 @@
 
     /* ================= Placeholder ================= */
 
-    function editCourse(id) {
+    async function editCourse(id) {
 
-        showToast("Edit feature will be implemented in Part 5.");
+        showLoading();
+
+        try {
+
+            const response = await fetch(`${API_URL}/${id}`);
+
+            if (!response.ok) {
+
+                throw new Error("Unable to load course.");
+
+            }
+
+            const course = await response.json();
+
+            document.getElementById("editId").value = course.id;
+
+            document.getElementById("editName").value = course.name;
+
+            document.getElementById("editDescription").value = course.description;
+
+            document.getElementById("editTargetDate").value = course.target_date;
+
+            document.getElementById("editStatus").value = course.status;
+
+            editModal.style.display = "flex";
+
+        }
+        catch (error) {
+
+            showToast(error.message, false);
+
+        }
+        finally {
+
+            hideLoading();
+
+        }
+
+    }
+
+    cancelEdit.addEventListener("click", () => {
+
+        editModal.style.display = "none";
+
+    });
+
+    editForm.addEventListener("submit", updateCourse);
+
+    async function updateCourse(event) {
+
+        event.preventDefault();
+
+        const id = document.getElementById("editId").value;
+
+        const course = {
+
+            name: document.getElementById("editName").value.trim(),
+
+            description: document.getElementById("editDescription").value.trim(),
+
+            target_date: document.getElementById("editTargetDate").value,
+
+            status: document.getElementById("editStatus").value
+
+        };
+
+        if (
+            !course.name ||
+            !course.description ||
+            !course.target_date ||
+            !course.status
+        ) {
+
+            showToast("Please complete all required fields.", false);
+
+            return;
+
+        }
+
+        showLoading();
+
+        try {
+
+            const response = await fetch(`${API_URL}/${id}`, {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify(course)
+
+            });
+
+            if (!response.ok) {
+
+                const error = await response.json();
+
+                throw new Error(error.error || "Unable to update course.");
+
+            }
+
+            editModal.style.display = "none";
+
+            showToast("Course updated successfully.");
+
+            await loadCourses();
+
+        }
+        catch (error) {
+
+            showToast(error.message, false);
+
+        }
+        finally {
+
+            hideLoading();
+
+        }
 
     }
 
