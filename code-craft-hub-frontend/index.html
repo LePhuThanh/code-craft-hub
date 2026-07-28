@@ -8,6 +8,428 @@
 
     <style>
 
+        :root{
+            --primary:#8B5CF6;
+            --primary-dark:#6D28D9;
+            --amber:#F59E0B;
+            --danger:#EF4444;
+            --success:#10B981;
+
+            --bg:#F5F3FF;
+            --card:#FFFFFF;
+            --border:#E5E7EB;
+
+            --text:#1F2937;
+            --text-light:#6B7280;
+
+            --shadow:0 10px 25px rgba(0,0,0,.08);
+            --radius:14px;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+        }
+
+        body{
+            background:var(--bg);
+            color:var(--text);
+        }
+
+        header{
+
+            background:linear-gradient(135deg,var(--primary),#A855F7);
+
+            color:white;
+
+            text-align:center;
+
+            padding:40px 20px;
+
+            box-shadow:var(--shadow);
+
+        }
+
+        header h1{
+
+            font-size:34px;
+
+        }
+
+        header p{
+
+            margin-top:8px;
+
+            opacity:.9;
+
+        }
+
+        main{
+
+            max-width:1200px;
+
+            margin:40px auto;
+
+            padding:20px;
+
+        }
+
+        section{
+
+            background:var(--card);
+
+            border-radius:var(--radius);
+
+            box-shadow:var(--shadow);
+
+            padding:25px;
+
+            margin-bottom:35px;
+
+        }
+
+        section h2{
+
+            margin-bottom:20px;
+
+            color:var(--primary);
+
+        }
+
+        form{
+
+            display:grid;
+
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+            gap:18px;
+
+        }
+
+        form div{
+
+            display:flex;
+
+            flex-direction:column;
+
+        }
+
+        label{
+
+            margin-bottom:8px;
+
+            font-weight:600;
+
+        }
+
+        input,
+        textarea,
+        select{
+
+            padding:12px;
+
+            border:1px solid var(--border);
+
+            border-radius:10px;
+
+            font-size:15px;
+
+            outline:none;
+
+            transition:.25s;
+
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus{
+
+            border-color:var(--primary);
+
+            box-shadow:0 0 0 4px rgba(139,92,246,.15);
+
+        }
+
+        textarea{
+
+            resize:vertical;
+
+        }
+
+        button{
+
+            border:none;
+
+            cursor:pointer;
+
+            border-radius:10px;
+
+            padding:12px 20px;
+
+            color:white;
+
+            font-weight:600;
+
+            transition:.25s;
+
+        }
+
+        #saveButton{
+
+            background:var(--primary);
+
+        }
+
+        #saveButton:hover{
+
+            background:var(--primary-dark);
+
+        }
+
+        .edit-btn{
+
+            background:var(--amber);
+
+        }
+
+        .delete-btn{
+
+            background:var(--danger);
+
+        }
+
+        button:hover{
+
+            transform:translateY(-2px);
+
+        }
+
+        table{
+
+            width:100%;
+
+            border-collapse:collapse;
+
+        }
+
+        thead{
+
+            background:var(--primary);
+
+            color:white;
+
+        }
+
+        th,
+        td{
+
+            padding:14px;
+
+            border-bottom:1px solid var(--border);
+
+            text-align:left;
+
+            vertical-align:top;
+
+        }
+
+        tbody tr:hover{
+
+            background:#F9FAFB;
+
+        }
+
+        td button{
+
+            margin-right:8px;
+
+        }
+
+        #editModal{
+
+            position:fixed;
+
+            inset:0;
+
+            display:none;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:rgba(0,0,0,.45);
+
+            z-index:999;
+
+        }
+
+        #editModal>div{
+
+            width:min(650px,92%);
+
+            background:white;
+
+            border-radius:18px;
+
+            padding:30px;
+
+            box-shadow:var(--shadow);
+
+        }
+
+        #loading{
+
+            position:fixed;
+
+            inset:0;
+
+            display:none;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:rgba(255,255,255,.65);
+
+            backdrop-filter:blur(2px);
+
+            z-index:1000;
+
+            font-size:22px;
+
+            font-weight:bold;
+
+            color:var(--primary);
+
+        }
+
+        #loading::before{
+
+            content:"";
+
+            width:48px;
+
+            height:48px;
+
+            margin-right:15px;
+
+            border-radius:50%;
+
+            border:5px solid #DDD;
+
+            border-top:5px solid var(--primary);
+
+            animation:spin .8s linear infinite;
+
+        }
+
+        @keyframes spin{
+
+            to{
+
+                transform:rotate(360deg);
+
+            }
+
+        }
+
+        #toast{
+
+            position:fixed;
+
+            right:25px;
+
+            top:25px;
+
+            min-width:280px;
+
+            display:none;
+
+            padding:16px 22px;
+
+            color:white;
+
+            border-radius:10px;
+
+            box-shadow:var(--shadow);
+
+            z-index:1200;
+
+        }
+
+        .toast-success{
+
+            background:var(--success);
+
+        }
+
+        .toast-error{
+
+            background:var(--danger);
+
+        }
+
+        @media(max-width:900px){
+
+            table,
+            thead,
+            tbody,
+            tr,
+            th,
+            td{
+
+                display:block;
+
+            }
+
+            thead{
+
+                display:none;
+
+            }
+
+            tr{
+
+                background:white;
+
+                border-radius:12px;
+
+                margin-bottom:20px;
+
+                box-shadow:var(--shadow);
+
+                padding:15px;
+
+            }
+
+            td{
+
+                border:none;
+
+                padding:10px 0;
+
+            }
+
+            td::before{
+
+                content:attr(data-label);
+
+                display:block;
+
+                color:var(--text-light);
+
+                font-size:13px;
+
+                margin-bottom:5px;
+
+                font-weight:bold;
+
+            }
+
+        }
+
     </style>
 </head>
 
